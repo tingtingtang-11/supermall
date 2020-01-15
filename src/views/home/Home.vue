@@ -6,24 +6,66 @@
     <home-swiper :banners="banners"></home-swiper>
     <recommend-view :recommends="recommends"></recommend-view>
     <feature-view></feature-view>
+    <tab-control class="tab-control" :titles="['流行','新款','精选']"></tab-control>
+
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
+    <li>xxx</li>
   </div>
 </template>
 
 <script>
-  import NavBar from "components/common/navbar/NavBar";
   import HomeSwiper from "./childComps/HomeSwiper";
   import RecommendView from "./childComps/RecommendView";
   import FeatureView from "./childComps/FeatureView";
+
+  import NavBar from "components/common/navbar/NavBar";
+  import TabControl from "components/content/tabControl/TabControl";
 
   import {getHomeMultiData} from "network/home";
 
   export default {
     name: "Home",
     components: {
-      NavBar,
       HomeSwiper,
       RecommendView,
-      FeatureView
+      FeatureView,
+      NavBar,
+      TabControl,
     },
     data(){
       return{
@@ -56,17 +98,24 @@
     padding-top: 44px;
   }
 
-    .home-nav{
-      background-color: var(--color-tint);
-      color: #ffffff;
+  .home-nav{
+    background-color: var(--color-tint);
+    color: #ffffff;
 
-      /*把顶部nav固定住*/
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
+    /*把顶部nav固定住*/
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
     /*  nav又被轮播图盖住了*/
-      z-index: 9;
-    }
+    z-index: 9;
+  }
+
+  .tab-control{
+  /*  吸顶功能*/
+    position: sticky;
+    top: 44px;
+    background-color: #ffffff;
+  }
 
 </style>
