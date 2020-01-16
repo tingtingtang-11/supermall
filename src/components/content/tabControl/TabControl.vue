@@ -29,6 +29,8 @@
     methods: {
       itemClick(index) {
         this.currentIndex = index;
+      //  内部数据往外面传送
+        this.$emit('tabClick', index)
       }
     }
   }

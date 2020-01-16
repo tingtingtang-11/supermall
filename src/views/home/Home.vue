@@ -6,8 +6,10 @@
     <home-swiper :banners="banners"></home-swiper>
     <recommend-view :recommends="recommends"></recommend-view>
     <feature-view></feature-view>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']"></tab-control>
-    <GoodsLIst :goods="goods['pop'].list"></GoodsLIst>
+    <tab-control class="tab-control"
+                 :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"></tab-control>
+    <GoodsLIst :goods="showGoods"></GoodsLIst>
 
   </div>
 </template>
@@ -46,7 +48,13 @@
           'pop': {page: 0, list: []},
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
-        }
+        },
+        currentType: 'pop',
+      }
+    },
+    computed: {
+      showGoods(){
+        return this.goods[this.currentType].list
       }
     },
     // 组件创建完毕 就需要发送网络请求
@@ -56,8 +64,31 @@
 
       //2.请求商品数据
       this.getHomeGoods('pop')
+      this.getHomeGoods('new')
+      this.getHomeGoods('sell')
     },
     methods: {
+      /**
+       * 事件监听相关的方法
+       */
+      tabClick(index) {
+        console.log(index)
+        switch (index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'sell'
+            break
+        }
+      },
+
+      /**
+       * 网络请求相关的方法
+       */
       getHomeMultiData(){
         // getHomeMultiData()表示调用方法
         getHomeMultiData().then(res =>{
@@ -74,7 +105,6 @@
           // 将网络请求得到都数组塞到 定义的新数组中 保留数据
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
-          console.log(this.goods[type].list)
         })
       }
     }
