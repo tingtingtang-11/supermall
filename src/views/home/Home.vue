@@ -7,44 +7,8 @@
     <recommend-view :recommends="recommends"></recommend-view>
     <feature-view></feature-view>
     <tab-control class="tab-control" :titles="['流行','新款','精选']"></tab-control>
+    <GoodsLIst :goods="goods['pop'].list"></GoodsLIst>
 
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
-    <li>xxx</li>
   </div>
 </template>
 
@@ -55,8 +19,9 @@
 
   import NavBar from "components/common/navbar/NavBar";
   import TabControl from "components/content/tabControl/TabControl";
+  import GoodsLIst from "components/content/goods/GoodsLIst";
 
-  import {getHomeMultiData} from "network/home";
+  import {getHomeMultiData, getHomeGoods} from "network/home";
 
   export default {
     name: "Home",
@@ -66,6 +31,7 @@
       FeatureView,
       NavBar,
       TabControl,
+      GoodsLIst,
     },
     data(){
       return{
@@ -76,20 +42,42 @@
         // result: null
         banners: [],
         recommends: [],
+        goods: {
+          'pop': {page: 0, list: []},
+          'new': {page: 0, list: []},
+          'sell': {page: 0, list: []},
+        }
       }
     },
     // 组件创建完毕 就需要发送网络请求
     created() {
       // 1.请求多个数据
-      // getHomeMultiData()表示调用方法
-      getHomeMultiData().then(res =>{
-        // console.log(res);
-        // this.result = res;
-        // res和result指向同一个对象 即使res被回收 result也有值
-        this.banners = res.data.banner.list;
-        this.recommends = res.data.recommend.list;
-      })
+      this.getHomeMultiData()
+
+      //2.请求商品数据
+      this.getHomeGoods('pop')
     },
+    methods: {
+      getHomeMultiData(){
+        // getHomeMultiData()表示调用方法
+        getHomeMultiData().then(res =>{
+          // console.log(res);
+          // this.result = res;
+          // res和result指向同一个对象 即使res被回收 result也有值
+          this.banners = res.data.banner.list;
+          this.recommends = res.data.recommend.list;
+        })
+      },
+      getHomeGoods(type){
+        const page = this.goods[type].page + 1
+        getHomeGoods(type, page).then(res => {
+          // 将网络请求得到都数组塞到 定义的新数组中 保留数据
+          this.goods[type].list.push(...res.data.list)
+          this.goods[type].page += 1
+          console.log(this.goods[type].list)
+        })
+      }
+    }
   }
 </script>
 
@@ -116,6 +104,7 @@
     position: sticky;
     top: 44px;
     background-color: #ffffff;
+    z-index: 9;
   }
 
 </style>
