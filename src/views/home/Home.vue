@@ -1,16 +1,16 @@
 <template>
   <div id="home">
-    <nav-bar class="home-nav">
-        <div slot="center">购物街</div>
-    </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view></feature-view>
-    <tab-control class="tab-control"
-                 :titles="['流行','新款','精选']"
-                 @tabClick="tabClick"></tab-control>
-    <GoodsLIst :goods="showGoods"></GoodsLIst>
+    <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
 
+    <scroll class="content">
+        <home-swiper :banners="banners"></home-swiper>
+        <recommend-view :recommends="recommends"></recommend-view>
+        <feature-view></feature-view>
+        <tab-control class="tab-control"
+                     :titles="['流行','新款','精选']"
+                     @tabClick="tabClick"></tab-control>
+        <GoodsLIst :goods="showGoods"></GoodsLIst>
+    </scroll>
   </div>
 </template>
 
@@ -20,10 +20,13 @@
   import FeatureView from "./childComps/FeatureView";
 
   import NavBar from "components/common/navbar/NavBar";
+  import Scroll from "components/common/scroll/Scroll";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsLIst from "components/content/goods/GoodsLIst";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
+
+  import BScroll from 'better-scroll'
 
   export default {
     name: "Home",
@@ -32,6 +35,7 @@
       RecommendView,
       FeatureView,
       NavBar,
+      Scroll,
       TabControl,
       GoodsLIst,
     },
@@ -92,7 +96,7 @@
       getHomeMultiData(){
         // getHomeMultiData()表示调用方法
         getHomeMultiData().then(res =>{
-          // console.log(res);
+          console.log(res);
           // this.result = res;
           // res和result指向同一个对象 即使res被回收 result也有值
           this.banners = res.data.banner.list;
@@ -112,11 +116,16 @@
 </script>
 
 <style scoped>
-  #home{
-    padding-top: 44px;
+  #home {
+    /*padding-top: 44px;*/
+    /*不会被页面中的其他内容撑高*/
+    height: 100vh;
+
+    /*scroll用的*/
+    position: relative;
   }
 
-  .home-nav{
+  .home-nav {
     background-color: var(--color-tint);
     color: #ffffff;
 
@@ -129,12 +138,28 @@
     z-index: 9;
   }
 
-  .tab-control{
+  .tab-control {
   /*  吸顶功能*/
     position: sticky;
     top: 44px;
     background-color: #ffffff;
     z-index: 9;
+  }
+
+  /*.content {*/
+  /*  height: calc(100% - 93px);*/
+  /*  overflow: hidden;*/
+  /*  margin-top: 44px;*/
+  /*}*/
+
+  .content {
+    overflow: hidden;
+
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
 
 </style>

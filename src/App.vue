@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <MainTabBar></MainTabBar>
+    <MainTabBar class="main-tab-bar"></MainTabBar>
   </div>
 </template>
 
@@ -18,5 +18,9 @@
 
 <style>
   @import "assets/css/base.css";
+  .main-tab-bar{
+    position: absolute;
+    z-index: 9;
+  }
 
 </style>
