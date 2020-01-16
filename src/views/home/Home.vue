@@ -2,7 +2,7 @@
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
 
-    <scroll class="content">
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
         <home-swiper :banners="banners"></home-swiper>
         <recommend-view :recommends="recommends"></recommend-view>
         <feature-view></feature-view>
@@ -11,6 +11,8 @@
                      @tabClick="tabClick"></tab-control>
         <GoodsLIst :goods="showGoods"></GoodsLIst>
     </scroll>
+<!--    监听组件的原生事件 需要写 .native-->
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -23,6 +25,7 @@
   import Scroll from "components/common/scroll/Scroll";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsLIst from "components/content/goods/GoodsLIst";
+  import BackTop from "components/content/backTop/BackTop";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
 
@@ -38,6 +41,7 @@
       Scroll,
       TabControl,
       GoodsLIst,
+      BackTop,
     },
     data(){
       return{
@@ -54,6 +58,7 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
+        isShowBackTop: true,
       }
     },
     computed: {
@@ -88,6 +93,16 @@
             this.currentType = 'sell'
             break
         }
+      },
+      backClick() {
+        // 直接访问了scroll组件中的内容
+        // 第三个参数是延迟时间
+        // this.$refs.scroll.scroll.scrollTo(0,0, 500)
+        // 将方法封装到组件中 直接调用
+        this.$refs.scroll.scrollTo(0, 0)
+      },
+      contentScroll(position) {
+        this.isShowBackTop = -(position.y) > 1000
       },
 
       /**
