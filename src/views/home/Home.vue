@@ -1,16 +1,20 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <tab-control :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"
+                 ref="tabControl1"
+                class="tab-control" v-show="isTabFixed"></tab-control>
 
     <scroll class="content" ref="scroll" :probe-type="3"
             @scroll="contentScroll" :pull-up-load="true"
             @pullingUp="loadMore">
-        <home-swiper :banners="banners"></home-swiper>
+        <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
         <recommend-view :recommends="recommends"></recommend-view>
         <feature-view></feature-view>
-        <tab-control class="tab-control"
-                     :titles="['流行','新款','精选']"
-                     @tabClick="tabClick"></tab-control>
+        <tab-control :titles="['流行','新款','精选']"
+                     @tabClick="tabClick"
+                      ref="tabControl2"></tab-control>
         <GoodsLIst :goods="showGoods"></GoodsLIst>
     </scroll>
 <!--    监听组件的原生事件 需要写 .native-->
@@ -30,6 +34,7 @@
   import BackTop from "components/content/backTop/BackTop";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
+  import {debounce} from "common/utils";
 
   import BScroll from 'better-scroll'
 
@@ -60,7 +65,12 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
+        // 是否展示 回到顶部 图片
         isShowBackTop: true,
+        // 吸顶高度
+        tabOffsetTop: 0,
+        // 是否吸顶
+        isTabFixed: false,
       }
     },
     computed: {
@@ -80,30 +90,26 @@
     },
     mounted() {
       // 3. 监听item中图片加载完成
-      // 进行防抖
-      const refresh = this.debounce(this.$refs.scroll.refresh(), 50)
+      // 进行防抖 图片加载完成的事件监听
+      const refresh = debounce(this.$refs.scroll.refresh(), 50)
 
       this.$bus.$on('itemImageLoad', () => {
         refresh()
       })
+
+      // 获取tabControl的offsetTop
+      // 组件是没有offsetTop的
+      // 所有的组件都有一个属性 $el: 用于获取组件中的元素
+      // 但是由于图片加载速度慢获取的高度不对
+      // 这里就简单监听轮播图加载完毕后 再获取offsetTop
+      // this.$refs.tabControl.$el.offsetTop
+      // 所以要放在swiperImageLoad方法中
     },
     methods: {
       /**
        * 事件监听相关的方法
        */
-      // 防抖函数
-      debounce(func, delay) {
-        // timer 记录一下有没有定时器
-        let timer = null
-        return function (...args) {
-          if(timer) clearTimeout(timer)
-          timer = setTimeout(() => {
-            func.apply(this, args)
-          }, delay)
-        }
-      },
       tabClick(index) {
-        console.log(index)
         switch (index) {
           case 0:
             this.currentType = 'pop'
@@ -115,6 +121,8 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index
+        this.$refs.tabControl2.currentIndex = index
       },
       backClick() {
         // 直接访问了scroll组件中的内容
@@ -123,13 +131,22 @@
         // 将方法封装到组件中 直接调用
         this.$refs.scroll.scrollTo(0, 0)
       },
+
       contentScroll(position) {
+        // 判断BackTop是否显示
         this.isShowBackTop = -(position.y) > 1000
+
+        // 决定tabControl是否吸顶（position：fixed）
+        this.isTabFixed = -(position.y) > this.tabOffsetTop
       },
+
       loadMore() {
         this.getHomeGoods(this.currentType)
 
         this.$refs.scroll.scroll.refresh()
+      },
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
       },
 
       /**
@@ -151,6 +168,7 @@
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
 
+          // 完成上拉加载更多
           this.$refs.scroll.finishPullUp()
         })
       }
@@ -172,22 +190,25 @@
     background-color: var(--color-tint);
     color: #ffffff;
 
-    /*把顶部nav固定住*/
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    /*  nav又被轮播图盖住了*/
-    z-index: 9;
+    /*在使用浏览器原生滚动时，为了让导航不跟随一起滚动*/
+    /*!*把顶部nav固定住*!*/
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    /*!*  nav又被轮播图盖住了*!*/
+    /*z-index: 9;*/
   }
 
-  .tab-control {
-  /*  吸顶功能*/
-    position: sticky;
-    top: 44px;
-    background-color: #ffffff;
-    z-index: 9;
-  }
+  /*加入滚动功能后 吸顶就不起效果了*/
+  /*.tab-control {*/
+  /*!*  吸顶功能*!*/
+  /*  position: sticky;*/
+  /*  top: 44px;*/
+  /*  background-color: #ffffff;*/
+  /*  z-index: 9;*/
+  /*}*/
+
 
   /*.content {*/
   /*  height: calc(100% - 93px);*/
@@ -205,4 +226,10 @@
     right: 0;
   }
 
+  .tab-control {
+    position: relative;
+    z-index: 9;
+    padding-top: 0;
+    background-color: #f6f6f6;
+  }
 </style>
