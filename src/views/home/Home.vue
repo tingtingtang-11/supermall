@@ -80,14 +80,28 @@
     },
     mounted() {
       // 3. 监听item中图片加载完成
+      // 进行防抖
+      const refresh = this.debounce(this.$refs.scroll.refresh(), 50)
+
       this.$bus.$on('itemImageLoad', () => {
-        this.$refs.scroll.refresh()
+        refresh()
       })
     },
     methods: {
       /**
        * 事件监听相关的方法
        */
+      // 防抖函数
+      debounce(func, delay) {
+        // timer 记录一下有没有定时器
+        let timer = null
+        return function (...args) {
+          if(timer) clearTimeout(timer)
+          timer = setTimeout(() => {
+            func.apply(this, args)
+          }, delay)
+        }
+      },
       tabClick(index) {
         console.log(index)
         switch (index) {
