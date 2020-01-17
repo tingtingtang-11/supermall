@@ -71,6 +71,7 @@
         tabOffsetTop: 0,
         // 是否吸顶
         isTabFixed: false,
+        saveY: 0,
       }
     },
     computed: {
@@ -104,6 +105,16 @@
       // 这里就简单监听轮播图加载完毕后 再获取offsetTop
       // this.$refs.tabControl.$el.offsetTop
       // 所以要放在swiperImageLoad方法中
+    },
+    // 进入组件的生命周期函数
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+
+      this.$refs.scroll.refresh()
+    },
+    // 离开组件的生命周期函数
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY()
     },
     methods: {
       /**
