@@ -34,7 +34,7 @@
   import BackTop from "components/content/backTop/BackTop";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
-  import {debounce} from "common/utils";
+  import {itemListenerMixin} from "common/mixin";
 
   export default {
     name: "Home",
@@ -48,6 +48,7 @@
       GoodsList,
       BackTop,
     },
+    mixins: [itemListenerMixin],
     data(){
       return{
         // 存储网络请求得到的数据
@@ -71,7 +72,7 @@
         isTabFixed: false,
         saveY: 0,
         // 监听事件是否加载完毕
-        itemImgListener: null,
+        // itemImgListener: null,
       }
     },
     computed: {
@@ -92,13 +93,13 @@
     mounted() {
       // 3. 监听item中图片加载完成
       // 进行防抖 图片加载完成的事件监听
-      const refresh = debounce(this.$refs.scroll.refresh(), 50)
+      // const refresh = debounce(this.$refs.scroll.refresh(), 50)
 
       // 对我们监听的事件进行保存
-      this.itemImgListener = () => {
-        refresh()
-      }
-      this.$bus.$on('itemImageLoad', this.itemImgListener)
+      // this.itemImgListener = () => {
+      //   refresh()
+      // }
+      // this.$bus.$on('itemImageLoad', this.itemImgListener)
 
       // 获取tabControl的offsetTop
       // 组件是没有offsetTop的
