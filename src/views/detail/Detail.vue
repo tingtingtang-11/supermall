@@ -1,9 +1,11 @@
 <template>
   <div id="detail">
-    <detail-nav-bar></detail-nav-bar>
-    <detail-swiper :top-images="topImages"></detail-swiper>
-    <detail-base-info  v-if="goods"  :goods="goods"></detail-base-info>
-    <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
+    <detail-nav-bar class="detail-nav"></detail-nav-bar>
+    <scroll class="content">
+      <detail-swiper :top-images="topImages"></detail-swiper>
+      <detail-base-info  v-if="goods"  :goods="goods"></detail-base-info>
+      <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
+    </scroll>
   </div>
 </template>
 
@@ -12,6 +14,8 @@
   import DetailSwiper from "./childComps/DetailSwiper";
   import DetailBaseInfo from "./childComps/DetailBaseInfo";
   import DetailShopInfo from "./childComps/DetailShopInfo";
+
+  import Scroll from "components/common/scroll/Scroll";
 
   import {getDetail, Goods, Shop} from "network/detail";
 
@@ -22,6 +26,7 @@
       DetailSwiper,
       DetailBaseInfo,
       DetailShopInfo,
+      Scroll,
     },
     data() {
       return {
@@ -53,5 +58,25 @@
 </script>
 
 <style scoped>
+  #detail {
+    /*detail页面盖住下面的导航栏*/
+    position: relative;
+    z-index: 10;
+    background-color: #fff;
+
+    height: 100vh;
+  }
+
+  /*Scroll需要指定content高度*/
+  .content {
+    height: calc(100% - 44px);
+  }
+
+  /*滚动时盖住顶部导航栏了 修改*/
+  .detail-nav {
+    position: relative;
+    z-index: 9;
+    background-color: #fff;
+  }
 
 </style>
