@@ -36,8 +36,6 @@
   import {getHomeMultiData, getHomeGoods} from "network/home";
   import {debounce} from "common/utils";
 
-  import BScroll from 'better-scroll'
-
   export default {
     name: "Home",
     components: {
@@ -72,6 +70,8 @@
         // 是否吸顶
         isTabFixed: false,
         saveY: 0,
+        // 监听事件是否加载完毕
+        itemImgListener: null,
       }
     },
     computed: {
@@ -94,9 +94,11 @@
       // 进行防抖 图片加载完成的事件监听
       const refresh = debounce(this.$refs.scroll.refresh(), 50)
 
-      this.$bus.$on('itemImageLoad', () => {
+      // 对我们监听的事件进行保存
+      this.itemImgListener = () => {
         refresh()
-      })
+      }
+      this.$bus.$on('itemImageLoad', this.itemImgListener)
 
       // 获取tabControl的offsetTop
       // 组件是没有offsetTop的
@@ -114,7 +116,11 @@
     },
     // 离开组件的生命周期函数
     deactivated() {
+      // 1.保存当前浏览的位置
       this.saveY = this.$refs.scroll.getScrollY()
+
+      // 2. 取消全局事件监听
+      this.$bus.$off('itemImgLoad', this.itemImgListener)
     },
     methods: {
       /**

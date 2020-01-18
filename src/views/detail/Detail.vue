@@ -26,6 +26,7 @@
   import Scroll from "components/common/scroll/Scroll";
 
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail";
+  import {debounce} from "common/utils";
 
   export default {
     name: "Detail",
@@ -50,6 +51,7 @@
         paramInfo: {},
         commentInfo: {},
         recommends: [],
+        itemImgListener: null,
       }
     },
     created() {
@@ -91,6 +93,21 @@
       imageLoad() {
         this.$refs.scroll.refresh()
       },
+    },
+    mounted() {
+      // 进行防抖 图片加载完成的事件监听
+      const refresh = debounce(this.$refs.scroll.refresh(), 50)
+
+      this.itemImgListener = () => {
+        refresh()
+      }
+
+      // 监听图片加载完毕
+      this.$bus.$on('itemImgLoad', this.itemImgListener)
+    },
+    // 这边取消的位置和home的不一样
+    destroyed() {
+      this.$bus.$off('itemImgLoad', this.itemImgListener)
     }
   }
 </script>
