@@ -1,10 +1,11 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="detail-nav"></detail-nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info  v-if="goods"  :goods="goods"></detail-base-info>
       <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
+      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
     </scroll>
   </div>
 </template>
@@ -14,6 +15,7 @@
   import DetailSwiper from "./childComps/DetailSwiper";
   import DetailBaseInfo from "./childComps/DetailBaseInfo";
   import DetailShopInfo from "./childComps/DetailShopInfo";
+  import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 
   import Scroll from "components/common/scroll/Scroll";
 
@@ -26,6 +28,7 @@
       DetailSwiper,
       DetailBaseInfo,
       DetailShopInfo,
+      DetailGoodsInfo,
       Scroll,
     },
     data() {
@@ -34,6 +37,7 @@
         topImages: [],
         goods: {},
         shop: {},
+        detailInfo: {}
       }
     },
     created() {
@@ -51,8 +55,15 @@
 
         // 3.获取店铺信息
         this.shop = new Shop(data.shopInfo)
-        console.log(this.shop);
+
+        // 4.保存商品详情信息
+        this.detailInfo = data.detailInfo
       })
+    },
+    methods: {
+      imageLoad() {
+        this.$refs.scroll.refresh()
+      },
     }
   }
 </script>
@@ -75,7 +86,7 @@
   /*滚动时盖住顶部导航栏了 修改*/
   .detail-nav {
     position: relative;
-    z-index: 9;
+    z-index: 10;
     background-color: #fff;
   }
 
