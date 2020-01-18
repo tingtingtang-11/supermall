@@ -25,8 +25,8 @@
       Swiper,
       SwiperItem
     },
-    data: {
-      return: {
+    data() {
+      return {
         isLoad: false
       }
     },
