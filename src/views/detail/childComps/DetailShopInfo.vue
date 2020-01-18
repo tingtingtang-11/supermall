@@ -64,29 +64,35 @@
     padding: 25px 8px;
     border-bottom: 5px solid #f2f5f8;
   }
+
   .shop-top {
     line-height: 45px;
     display: flex;
     align-items: center;
   }
+
   .shop-top img {
     width: 45px;
     height: 45px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 50%;
   }
+
   .shop-top .title {
     margin-left: 10px;
     vertical-align: center;
   }
+
   .shop-middle {
     display: flex;
     align-items: center;
     margin-top: 15px;
   }
+
   .shop-middle-item {
     flex: 1;
   }
+
   .shop-middle-left {
     display: flex;
     justify-content: space-evenly;
@@ -94,45 +100,55 @@
     color: #333333;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
+
   .sells-count,
   .goods-count {
     font-size: 18px;
   }
-  .sells-text,
-  .goods-text {
+
+  .sells-text, .goods-text {
     font-size: 12px;
     margin-top: 10px;
   }
+
   .shop-middle-right {
     font-size: 13px;
     color: #333333;
   }
+
   .shop-middle-right table {
     width: 120px;
     margin-left: 30px;
   }
+
   .shop-middle-right table td {
     padding: 5px 0;
   }
+
   .shop-middle-right .score {
     color: #5ea732;
   }
+
   .shop-middle-right .score-better {
     color: #f13e3a;
   }
+
   .shop-middle-right .better span {
     padding: 3px;
     text-align: center;
     color: #ffffff;
     background-color: #5ea732;
   }
+
   .shop-middle-right .better-more span {
     background-color: #f13e3a;
   }
+
   .shop-bottom {
     margin-top: 10px;
     text-align: center;
   }
+
   .enter-shop {
     font-size: 14px;
     line-height: 30px;
