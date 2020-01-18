@@ -7,6 +7,7 @@
       <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
       <detail-param-info :param-info="paramInfo"></detail-param-info>
+      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
     </scroll>
   </div>
 </template>
@@ -18,6 +19,7 @@
   import DetailShopInfo from "./childComps/DetailShopInfo";
   import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
   import DetailParamInfo from "./childComps/DetailParamInfo";
+  import DetailCommentInfo from "./childComps/DetailCommentInfo";
 
   import Scroll from "components/common/scroll/Scroll";
 
@@ -32,6 +34,7 @@
       DetailShopInfo,
       DetailGoodsInfo,
       DetailParamInfo,
+      DetailCommentInfo,
       Scroll,
     },
     data() {
@@ -42,6 +45,7 @@
         shop: {},
         detailInfo: {},
         paramInfo: {},
+        commentInfo: {},
       }
     },
     created() {
@@ -65,6 +69,12 @@
 
         // 5.获取商品参数信息
         this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+
+        // 6. 取出评论信息
+        if(data.rate.cRate !== 0){
+          this.commentInfo = data.rate.list[0]
+          console.log(this.commentInfo);
+        }
       })
     },
     methods: {
