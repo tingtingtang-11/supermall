@@ -15,7 +15,7 @@
         <tab-control :titles="['流行','新款','精选']"
                      @tabClick="tabClick"
                       ref="tabControl2"></tab-control>
-        <GoodsLIst :goods="showGoods"></GoodsLIst>
+        <goods-list :goods="showGoods"></goods-list>
     </scroll>
 <!--    监听组件的原生事件 需要写 .native-->
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
@@ -30,7 +30,7 @@
   import NavBar from "components/common/navbar/NavBar";
   import Scroll from "components/common/scroll/Scroll";
   import TabControl from "components/content/tabControl/TabControl";
-  import GoodsLIst from "components/content/goods/GoodsLIst";
+  import GoodsList from "components/content/goods/GoodsList";
   import BackTop from "components/content/backTop/BackTop";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
@@ -47,7 +47,7 @@
       NavBar,
       Scroll,
       TabControl,
-      GoodsLIst,
+      GoodsList,
       BackTop,
     },
     data(){
