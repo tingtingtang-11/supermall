@@ -10,6 +10,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
+    <detail-buttom-bar></detail-buttom-bar>
   </div>
 </template>
 
@@ -22,6 +23,7 @@
   import DetailParamInfo from "./childComps/DetailParamInfo";
   import DetailCommentInfo from "./childComps/DetailCommentInfo";
   import GoodsList from "components/content/goods/GoodsList";
+  import DetailButtomBar from "./childComps/DetailBottomBar";
 
   import Scroll from "components/common/scroll/Scroll";
 
@@ -39,6 +41,7 @@
       DetailParamInfo,
       DetailCommentInfo,
       GoodsList,
+      DetailButtomBar,
       Scroll,
     },
     mixins: [itemListenerMixin],
@@ -178,7 +181,7 @@
 
   /*Scroll需要指定content高度*/
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 58px);
   }
 
   /*滚动时盖住顶部导航栏了 修改*/
