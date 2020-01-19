@@ -92,7 +92,8 @@
     },
     methods: {
       imageLoad() {
-        this.$refs.scroll.refresh()
+        // this.$refs.scroll.refresh()
+        this.refresh()
       },
     },
     mounted() {
