@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"></detail-nav-bar>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"></detail-nav-bar>
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info  v-if="goods"  :goods="goods"></detail-base-info>
       <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"></detail-goods-info>
-      <detail-param-info :param-info="paramInfo"></detail-param-info>
-      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
-      <goods-list :goods="recommends"></goods-list>
+      <detail-param-info ref="params" :param-info="paramInfo"></detail-param-info>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
+      <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
   </div>
 </template>
@@ -53,6 +53,9 @@
         commentInfo: {},
         recommends: [],
         // itemImgListener: null,
+        // 每个主题的顶部位置
+        themeTopYs: [],
+        currentIndex: 0,
       }
     },
     created() {
@@ -82,21 +85,78 @@
           this.commentInfo = data.rate.list[0]
           console.log(this.commentInfo);
         }
+
+        // this.$nextTick(() => {
+        //   // 根据最新的数据，对应的DOM是已经被渲染出来了
+        //   // 但是图片还没有加载完(offsetTop是不包含图片的)
+        //   // offsetTop值不对的时候，都是因为图片的问题
+        //   this.themeTopYs = []
+        //
+        //   this.themeTopYs.push(0);
+        //   this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+        //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+        //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+        //
+        //   console.log(this.themeTopYs);
+        // })
       })
 
       // 3. 请求推荐数据
       getRecommend().then(res => {
         this.recommends = res.data.list
-        console.log(res);
       })
     },
     methods: {
       imageLoad() {
         // this.$refs.scroll.refresh()
         this.refresh()
+
+        this.themeTopYs = []
+
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+        // push进一个很大的值
+        this.themeTopYs.push(Number.MAX_VALUE)
+
+        console.log(this.themeTopYs);
       },
+      titleClick(index) {
+        console.log(index)
+        this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
+      },
+      contentScroll(position) {
+        // 1.获取y值
+        const positionY = -position.y
+
+        let length = this.themeTopYs.length
+        // 2.positionY和主题中的值进行对比
+        // 根据当前滚动的位置改变导航栏的主题
+
+        // for(let i = 0; i < length; i++){
+        //   // 这样做 最后一种情况越界了
+        //   // if(positionY > this.themeTopYs[i] && positionY < this.themeTopYs[i+1]){
+        //   //   console.log(i)
+        //   // }
+        //   if(this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1]) ||
+        //     (i === length - 1 && positionY >= this.themeTopYs[i]))){
+        //     this.currentIndex = i
+        //     this.$refs.nav.currentIndex = this.currentIndex
+        //   }
+        // }
+        for(let i = 0; i < length-1; i++){
+          if(this.currentIndex !== i && (positionY > this.themeTopYs[i] && positionY < this.themeTopYs[i+1])){
+            this.currentIndex = i
+            this.$refs.nav.currentIndex = this.currentIndex
+          }
+        }
+      }
     },
     mounted() {
+
+    },
+    updated() {
 
     },
     // 这边取消的位置和home的不一样
