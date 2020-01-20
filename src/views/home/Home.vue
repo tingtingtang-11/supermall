@@ -31,10 +31,9 @@
   import Scroll from "components/common/scroll/Scroll";
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
-  import BackTop from "components/content/backTop/BackTop";
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
-  import {itemListenerMixin} from "common/mixin";
+  import {itemListenerMixin, backTopMixin} from "common/mixin";
 
   export default {
     name: "Home",
@@ -46,9 +45,8 @@
       Scroll,
       TabControl,
       GoodsList,
-      BackTop,
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     data(){
       return{
         // 存储网络请求得到的数据
@@ -65,7 +63,7 @@
         },
         currentType: 'pop',
         // 是否展示 回到顶部 图片
-        isShowBackTop: true,
+        // isShowBackTop: false,
         // 吸顶高度
         tabOffsetTop: 0,
         // 是否吸顶
@@ -145,13 +143,13 @@
           this.$refs.tabControl2.currentIndex = index
         }
       },
-      backClick() {
-        // 直接访问了scroll组件中的内容
-        // 第三个参数是延迟时间
-        // this.$refs.scroll.scroll.scrollTo(0,0, 500)
-        // 将方法封装到组件中 直接调用
-        this.$refs.scroll.scrollTo(0, 0)
-      },
+      // backClick() {
+      //   // 直接访问了scroll组件中的内容
+      //   // 第三个参数是延迟时间
+      //   // this.$refs.scroll.scroll.scrollTo(0,0, 500)
+      //   // 将方法封装到组件中 直接调用
+      //   this.$refs.scroll.scrollTo(0, 0)
+      // },
 
       contentScroll(position) {
         // 判断BackTop是否显示

@@ -2,6 +2,9 @@
   <div id="detail">
     <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"></detail-nav-bar>
     <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+      <ul>
+        <li v-for="item in $store.state.cartList">{{item}}</li>
+      </ul>
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info  v-if="goods"  :goods="goods"></detail-base-info>
       <detail-shop-info v-if="shop" :shop="shop"></detail-shop-info>
@@ -10,7 +13,8 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
-    <detail-buttom-bar></detail-buttom-bar>
+    <detail-buttom-bar @addCart="addToCart"></detail-buttom-bar>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -28,7 +32,7 @@
   import Scroll from "components/common/scroll/Scroll";
 
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail";
-  import {itemListenerMixin} from "common/mixin";
+  import {itemListenerMixin, backTopMixin} from "common/mixin";
 
   export default {
     name: "Detail",
@@ -44,7 +48,7 @@
       DetailButtomBar,
       Scroll,
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     data() {
       return {
         iid: null,
@@ -122,11 +126,8 @@
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
         // push进一个很大的值
         this.themeTopYs.push(Number.MAX_VALUE)
-
-        console.log(this.themeTopYs);
       },
       titleClick(index) {
-        console.log(index)
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
       },
       contentScroll(position) {
@@ -154,7 +155,27 @@
             this.$refs.nav.currentIndex = this.currentIndex
           }
         }
-      }
+
+        // 3.是否显示回到顶部
+        this.isShowBackTop = -(position.y) > 1000
+      },
+      addToCart() {
+        // 1.获取购物车需要展示的信息
+        const product = {}
+        product.img = this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.realPrice
+        product.iid = this.iid
+        product.count = 1
+
+        // 2.将商品添加到购物车里
+        // 不要这么做，对store中状态的修改要通过mutation
+        // this.$store.cartList.push(product)
+        // 直接通过mutation
+        // this.$store.commit('addCart', product)
+        this.$store.dispatch('addCart', product)
+      },
     },
     mounted() {
 

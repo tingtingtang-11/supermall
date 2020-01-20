@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="bar-item bar-right">
-      <div class="cart">加入购物车</div>
+      <div class="cart" @click="addToCart">加入购物车</div>
       <div class="buy">购买</div>
     </div>
   </div>
@@ -23,7 +23,12 @@
 
 <script>
   export default {
-    name: "DetailButtomBar"
+    name: "DetailButtomBar",
+    methods: {
+      addToCart() {
+        this.$emit('addCart')
+      }
+    }
   }
 </script>
 
@@ -32,14 +37,15 @@
     /*height: 49px;*/
     /*background-color: red;*/
 
-    /*position: relative;*/
-    /*bottom: 49px;*/
-    height: 58px;
-    position: fixed;
+    position: relative;
+    /*bottom: 58px;*/
+
+    /*height: 58px;*/
+    /*position: fixed;*/
     background-color: #fff;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
 
     display: flex;
     text-align: center;
