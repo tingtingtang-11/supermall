@@ -9,12 +9,14 @@
     <shop-list></shop-list>
 
 <!--    底部汇总-->
+    <shop-bottom-bar></shop-bottom-bar>
   </div>
 </template>
 
 <script>
   import NavBar from "components/common/navbar/NavBar";
   import ShopList from "./childComps/ShopList";
+  import ShopBottomBar from "./childComps/ShopBottomBar";
 
   import { mapGetters } from 'vuex'
 
@@ -23,6 +25,7 @@
     components: {
       NavBar,
       ShopList,
+      ShopBottomBar,
     },
     computed: {
       // 两种语法
