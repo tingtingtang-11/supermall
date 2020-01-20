@@ -31,6 +31,8 @@
   import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail";
   import {itemListenerMixin, backTopMixin} from "common/mixin";
 
+  import { mapActions } from 'vuex'
+
   export default {
     name: "Detail",
     components: {
@@ -111,6 +113,7 @@
       })
     },
     methods: {
+      ...mapActions(['addCart']),
       imageLoad() {
         // this.$refs.scroll.refresh()
         this.refresh()
@@ -171,7 +174,17 @@
         // this.$store.cartList.push(product)
         // 直接通过mutation
         // this.$store.commit('addCart', product)
-        this.$store.dispatch('addCart', product)
+        // 通过action
+        // this.$store.dispatch('addCart', product)
+        // action返回promise
+        // this.$store.dispatch('addCart', product).then(res => {
+        //   console.log(res)
+        // })
+
+        // 将vuex中的action转换成组件中的methods
+        this.addCart(product).then(res => {
+          console.log(res)
+        })
       },
     },
     mounted() {
