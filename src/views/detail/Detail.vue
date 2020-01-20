@@ -175,16 +175,17 @@
         // 直接通过mutation
         // this.$store.commit('addCart', product)
         // 通过action
-        // this.$store.dispatch('addCart', product)
+        this.$store.dispatch('addCart', product)
         // action返回promise
         // this.$store.dispatch('addCart', product).then(res => {
         //   console.log(res)
         // })
 
         // 将vuex中的action转换成组件中的methods
-        this.addCart(product).then(res => {
-          console.log(res)
-        })
+        // this.addCart(product).then(res => {
+        //   // console.log(res)
+        //   this.$toast.show(res, 2000)
+        // })
       },
     },
     mounted() {
