@@ -1,7 +1,7 @@
 <template>
   <div class="bottom-bar">
     <div class="check-all-content">
-      <check-button class="check-all-button"></check-button>
+      <check-button class="check-all-button" :is-checked="isSelectAll"></check-button>
       <span>全选</span>
     </div>
 
@@ -34,6 +34,21 @@
       },
       checkLength() {
         return this.$store.state.cartList.filter(item => item.checked).length
+      },
+      isSelectAll() {
+        // 如果购物车为空
+        if (this.$store.state.cartList.length === 0) return false
+        // 1、使用filter
+        // return !(this.$store.state.cartList.filter(item => !item.checked).length)
+        // 2、使用find
+        // return !this.$store.state.cartList.find(item => !item.checked)
+        // 3、普通遍历
+        for (let item of this.$store.state.cartList){
+          if(!item.checked) {
+            return false
+          }
+        }
+        return true
       }
     }
   }
